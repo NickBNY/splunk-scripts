@@ -1,0 +1,6 @@
+0 1 * * 0 nmap -sV -T4 -p53,20,21,22,23,25,80,110,143,389,636,443,445,465,587,993,995,10443,1433,1723,1701,3306,3389,5080,8778,7780,8080,8000,9000 -iL iplist > rep &&  sed  's/\?//g' rep | python nmap2csv.py > /opt/import/nmap.csv
+0 2 * * 0 grep 443 /opt/import/nmap.csv | cut -f1 -d, >sslv3rep &&  while read line; do bash checksslv3.sh "$line"; done < sslv3rep > sslv3.csv && cp sslv3.csv /opt/import/sslv3.csv
+5 6 * * * cd /tmp/ti/ && wget -i http://www.malwaredomainlist.com/hostslist/ip.txt -O list &&  sed -i 's/Malicious Host//g' list & sed -i 's/^#.*//g' list & sed -i 's/^\/.*//g' list & sed -i '/^$/d' list &  sed -i 's/#/,/g' list & cat list | tr -d '[:blank:]'> /opt/import/MALICIOUS_IP.csv
+10 6 * * * cd /tmp/ti &&  sed -i 's/Malicious Host//g' list & sed -i 's/^#.*//g' list & sed -i 's/^\/.*//g' list & sed -i '/^$/d' list &  sed -i 's/#/,/g' list & cat list | tr -d '[:blank:]'> /opt/import/MALICIOUS_IP.csv
+
+ cat /opt/import/cloudflare-sec.json  | jq -r '.result  .timeseries[0] .threats  | [.[] | tostring] | @csv' | sed -e 's/\"//g'
