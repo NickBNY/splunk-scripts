@@ -3,5 +3,5 @@
 5 6 * * * cd /tmp/ti/ && wget -i http://www.malwaredomainlist.com/hostslist/ip.txt -O list &&  sed -i 's/Malicious Host//g' list & sed -i 's/^#.*//g' list & sed -i 's/^\/.*//g' list & sed -i '/^$/d' list &  sed -i 's/#/,/g' list & cat list | tr -d '[:blank:]'> /opt/import/MALICIOUS_IP.csv
 10 6 * * * cd /tmp/ti &&  sed -i 's/Malicious Host//g' list & sed -i 's/^#.*//g' list & sed -i 's/^\/.*//g' list & sed -i '/^$/d' list &  sed -i 's/#/,/g' list & cat list | tr -d '[:blank:]'> /opt/import/MALICIOUS_IP.csv
 
- cat /opt/import/cloudflare-sec.json  | jq -r '.result  .timeseries[0] .threats  | [.[] | tostring] | @csv' | sed -e 's/\"//g'
+ cat file.json  | jq -r '.result  .timeseries[0] .threats  | [.[] | tostring] | @csv' | sed -e 's/\"//g'
 cat $1 |     sed -e 's/[{}]/''/g' |      awk -v k="text" '{n=split($0,a,","); for (i=1; i<=n; i++) print a[i]}' | grep "\"name\|content\|proxied\|type"   | sed 's/\"type\"\:\"//g'| sed 's/\"name\":\"/,/g' | sed 's/\"content\":\"/,/g' | sed 's/\"proxied\":/,/g'  | sed ':a;N;$!ba;s/\"\n//g'
